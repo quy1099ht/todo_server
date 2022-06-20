@@ -5,12 +5,13 @@ const { check, validationResult } = require('express-validator');
 const { validateEmail, validatePassword } = require("../middlewares/validationMiddleware");
 const { errorHandleMiddleware, validateErrMiddleware, initErrors } = require("../middlewares/errorMiddleWare");
 
-const controller =  require('../controlers/account/acounnt')
+const controller = require('../controlers/account/acounnt');
+const { methodNotAllowed } = require("../middlewares/methodMiddleware");
 
-router.post('/api/v2/register', initErrors, validateEmail,validatePassword,validateErrMiddleware, controller.register, errorHandleMiddleware);
+router.route('/api/v2/register').post(initErrors, validateEmail, validatePassword, validateErrMiddleware, controller.register, errorHandleMiddleware)
 
-router.post('/api/v2/login', controller.login, errorHandleMiddleware);
+router.route('/api/v2/login').post(controller.login, errorHandleMiddleware)
 
-router.get("/api/v2/getUser", accessTokenVerify, controller.getUser);
+router.route("/api/v2/getUser").get(accessTokenVerify, controller.getUser)
 
 module.exports = router

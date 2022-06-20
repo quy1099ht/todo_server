@@ -23,8 +23,9 @@ router.use(express.static('public'));
 
 var urlCodeParser = require('body-parser').urlencoded({ extended: false });
 
-app.use('/', require('./routers/taskRouter'));
+app.use(require('./routers/taskRouter'));
 app.use(require('./routers/accountRouter'));
+app.use(require('./routers/configRouter'));
 
 
 app.use(router);

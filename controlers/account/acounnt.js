@@ -20,12 +20,11 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     const user = await getUser(req.body.email);
-    if(!user) return setOneErrMsg(req, next, 422, "Email is wrong");
+    if (!user) return setOneErrMsg(req, next, 422, "Email is wrong");
 
     if (!bcrypt.compareSync(req.body.password, user.password.trim())) return setOneErrMsg(req, next, 422, "Password is wrong");
 
     req.body.password = undefined;
-
     req.body.id = user.id;
 
     return res.status(200).json(getNewKeys(req));

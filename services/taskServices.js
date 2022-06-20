@@ -18,10 +18,14 @@ exports.addNewTask = async () => {
     })
 }
 
-exports.updateTaskStatus = async (task,taskStatus) => {
+exports.deleteTaskService = async (id) => {
+    await Task.deleteOne({"_id" : id});
+}
+
+exports.updateTaskStatus = async (task, taskStatus) => {
     await Task.findByIdAndUpdate(task.id, {
         ...task,
-        state : taskStatus
+        state: taskStatus
     });
 }
 

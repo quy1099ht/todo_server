@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const { validateEmail, validatePassword } = require("../middlewares/validationMiddleware");
 const { errorHandleMiddleware, validateErrMiddleware, initErrors } = require("../middlewares/errorMiddleWare");
 
-const controller =  require('../controlers/api/acounnt')
+const controller =  require('../controlers/account/acounnt')
 
 router.post('/api/v2/register', initErrors, validateEmail,validatePassword,validateErrMiddleware, controller.register, errorHandleMiddleware);
 

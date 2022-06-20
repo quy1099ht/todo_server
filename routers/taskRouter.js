@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
-const controller =  require('../controlers/api/task');
 const { accessTokenVerify } = require("../middlewares/tokenMiddleWare");
+
+const controller =  require('../controlers/task/task');
+
 
 router.get('/api/v1/getTasks',accessTokenVerify, controller.get)
 router.post('/api/v1/addTask',accessTokenVerify, controller.addTask)

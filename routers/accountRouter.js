@@ -9,7 +9,7 @@ const controller =  require('../controlers/account/acounnt')
 
 router.post('/api/v2/register', initErrors, validateEmail,validatePassword,validateErrMiddleware, controller.register, errorHandleMiddleware);
 
-router.post('/api/v2/login', controller.login);
+router.post('/api/v2/login', controller.login, errorHandleMiddleware);
 
 router.get("/api/v2/getUser", accessTokenVerify, controller.getUser);
 

@@ -17,11 +17,11 @@ exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
             break;
     }
     return {
+        "status": errorStatus,
         errors: [
             {
                 "code": errorCode,
                 "message": `${errorMessage}.`,
-                "status": errorStatus
             }
         ]
     }
@@ -31,14 +31,13 @@ exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
 exports.errorMsgGenerator = (errorStatus, errorMessage) => {
     return {
         "code": errorCodeGenerator(errorStatus, errorMessage),
-        "message": `${errorMessage}.`,
-        "status": errorStatus
+        "message": `${errorMessage}.`
     }
 }
 
 exports.setOneErrMsg = (req, next, errStatus, errMsg) => {
     req.status = errStatus;
-    req.errCode = errorCodeGenerator(errStatus,errMsg);
+    req.errCode = errorCodeGenerator(errStatus, errMsg);
     req.message = `${errMsg}`;
     return next();
 }

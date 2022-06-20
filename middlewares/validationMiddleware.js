@@ -13,7 +13,7 @@ exports.validateEmail = (req, res, next) => {
 
     if (RegExp(emailRegex).test(req.body.email)) return next();
 
-    return res.status(400).json(errorMsgHandler("INV", 400, "Invalid Email"));
+    return res.status(422).json(errorMsgHandler("INV", 422, "Invalid Email"));
 }
 
 exports.validatePassword = (req, res, next) => {

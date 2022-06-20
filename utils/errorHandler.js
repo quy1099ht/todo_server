@@ -11,10 +11,15 @@ const errorCodeGenerator = (errorStatus, errorMessage) => {
 }
 
 exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
+    switch (errorStatus) {
+        case 400:
+            errorCode = `${errorStatus}-${errorCode[4]}:EXISTED`
+            break;
+    }
     return {
         errors: [
             {
-                "code": errorStatus + "-" + errorCode,
+                "code": errorCode,
                 "message": `${errorMessage}.`,
                 "status": errorStatus
             }
@@ -29,4 +34,11 @@ exports.errorMsgGenerator = (errorStatus, errorMessage) => {
         "message": `${errorMessage}.`,
         "status": errorStatus
     }
+}
+
+exports.setOneErrMsg = (req, next, errStatus, errMsg) => {
+    req.status = errStatus;
+    req.errCode = errorCodeGenerator(errStatus,errMsg);
+    req.message = `${errMsg}`;
+    return next();
 }

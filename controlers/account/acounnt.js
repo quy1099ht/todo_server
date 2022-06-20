@@ -5,13 +5,7 @@ const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
 const { getUser, saltRound, getHashedPassword, getNewKeys, emailExisted, createNewUser } = require("../../services/userServices");
 
-
-
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
-
-
-
-
 
 exports.register = async (req, res, next) => {
     var user = await getUser(req);

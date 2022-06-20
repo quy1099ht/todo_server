@@ -4,6 +4,7 @@ const { MongoClient } = require('mongodb');
 const Task = require("../models/Tasks");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const { setOneErrMsg } = require("../utils/errorHandler");
 
 const insertUserToDB = (res, data) => {
     User.create(data, () => {
@@ -47,8 +48,5 @@ exports.getNewKeys = (req) => {
 }
 
 exports.emailExisted = (req, res, next) => {
-    req.status = 400;
-    req.errCode = "EXISTED";
-    req.message = "The email is already been used";
-    return next();
+    return setOneErrMsg(req,next,400,"Email been used");
 }

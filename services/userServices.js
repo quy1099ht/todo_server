@@ -5,6 +5,7 @@ const Task = require("../models/Tasks");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const { setOneErrMsg } = require("../utils/errorHandler");
+const { successJsonFormat } = require("../utils/successHandler");
 
 const insertUserToDB = (res, data) => {
     User.create(data, () => {
@@ -25,8 +26,8 @@ exports.createNewUser = (req,res) => {
     })
 }
 
-exports.getUser = async (req) => {
-    var user = await User.findOne({ email: req.body.email });
+exports.getUser = async (email) => {
+    var user = await User.findOne({ email: email });
     return user;
 }
 
@@ -40,11 +41,10 @@ exports.getHashedPassword = (data) => {
 exports.getNewKeys = (req) => {
     const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: "50m" });
     const refreshToken = jwt.sign(req.body, process.env.REFRESH_KEY, { expiresIn: "7h" })
-    return {
-        status: 200,
+    return successJsonFormat(200,{
         accessToken: accessToken,
         refreshToken: refreshToken
-    };
+    },"Logged in successfully");
 }
 
 exports.emailExisted = (req, res, next) => {

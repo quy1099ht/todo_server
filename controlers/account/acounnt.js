@@ -8,7 +8,7 @@ const { getUser, saltRound, getHashedPassword, getNewKeys, emailExisted, createN
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
 
 exports.register = async (req, res, next) => {
-    var user = await getUser(req);
+    var user = await getUser(req.body.email);
     if (user != null) {
         return emailExisted(req, res, next);
     }
@@ -18,7 +18,7 @@ exports.register = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
-    const user = await getUser(req);
+    const user = await getUser(req.body.email);
     console.log(user.id);
 
     if (!bcrypt.compareSync(req.body.password, user.password.trim())) {
@@ -35,6 +35,6 @@ exports.login = async (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
     return res.status(200).json({
-        user: req.user
+        user: getUser(req.user.email)
     });
 }

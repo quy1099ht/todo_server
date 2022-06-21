@@ -12,7 +12,7 @@ const errorCodeGenerator = (errorStatus, errorMessage) => {
 
 exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
     switch (errorStatus) {
-        case 400:
+        case 409:
             errorCode = `${errorStatus}-${errorCode[4]}:EXISTED`
             break;
     }

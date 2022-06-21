@@ -9,8 +9,8 @@ exports.getTasksService = async (user) => {
     return tasks;
 }
 
-exports.getOneTaskService = (tasks, id) => {
-    tasks = tasks.filter((value)=>value.id === id);
+exports.getTaskDetailService = (tasks, id) => {
+    tasks = tasks.filter((value) => value.id === id);
     return tasks[0];
 }
 
@@ -30,12 +30,28 @@ exports.deleteTaskService = async (id) => {
     await Task.deleteOne({ "_id": id });
 }
 
-exports.updateTaskStatusService = async (task, taskProgress) => {
-    let updatePart = {
-        progress: taskProgress,
-        state: "In Progress",
-    }
-    console.log(updatePart);
-    // await Task.findByIdAndUpdate(task.id, updatePart);
+exports.updateTaskStatusService = async (task, progress) => {
+    if(typeof progress === "undefined") return false;
+
+    if(typeof progress === null) return false;
+
+    if(progress < 0) return false;
+
+    if (typeof task == "undefined") return false;
+
+    let state = "";
+    let finishAt = null;
+    
+    if (progress === 0) state = "New";
+    if (progress > 0 && progress < 100) state = "In Progress"
+    if (progress >= 100) { progress = 100; state = "Finish"; finishAt = new Date(Date.now()); }
+    
+    await Task.findByIdAndUpdate(task.id, {
+        progress: progress,
+        state: state,
+        finishAt: finishAt
+    });
+
+    return true;
 }
 

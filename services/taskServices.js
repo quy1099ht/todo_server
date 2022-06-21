@@ -31,21 +31,23 @@ exports.deleteTaskService = async (id) => {
 }
 
 exports.updateTaskStatusService = async (task, progress) => {
-    if(typeof progress === "undefined") return false;
+    if (typeof progress === "undefined") return false;
 
-    if(typeof progress === null) return false;
+    if (typeof progress === null) return false;
 
-    if(progress < 0) return false;
+    if (progress < 0) return false;
 
     if (typeof task == "undefined") return false;
 
     let state = "";
     let finishAt = null;
-    
+
     if (progress === 0) state = "New";
-    if (progress > 0 && progress < 100) state = "In Progress"
+
+    if (progress > 0 && progress < 100) state = "In Progress";
+
     if (progress >= 100) { progress = 100; state = "Finish"; finishAt = new Date(Date.now()); }
-    
+
     await Task.findByIdAndUpdate(task.id, {
         progress: progress,
         state: state,

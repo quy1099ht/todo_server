@@ -17,29 +17,28 @@ const insertUserToDB = (res, data) => {
 
 exports.saltRound = 10;
 
-exports.createNewUser = (req,res) => {
+exports.createNewUserService = (req,res) => {
     return insertUserToDB(res, {
         email: req.body.email,
-        password: this.getHashedPassword(req.body.password),
+        password: this.getHashedPasswordService(req.body.password),
         username: req.body.username,
         image: ""
     })
 }
 
-exports.getUser = async (email) => {
+exports.getUserService = async (email) => {
     var user = await User.findOne({ email: email });
     return user;
 }
 
-exports.getHashedPassword = (data) => {
+exports.getHashedPasswordService = (data) => {
     const salt = bcrypt.genSaltSync(this.saltRound);
-    console.log(salt);
     const hashedPass = bcrypt.hashSync(data, salt);
     return hashedPass;
 }
 
-exports.getNewKeys = (req) => {
-    const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: "50m" });
+exports.getNewKeysService = (req) => {
+    const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: "3d" });
     const refreshToken = jwt.sign(req.body, process.env.REFRESH_KEY, { expiresIn: "7h" })
     return successJsonFormat(200,{
         accessToken: accessToken,
@@ -47,6 +46,6 @@ exports.getNewKeys = (req) => {
     },"Logged in successfully");
 }
 
-exports.emailExisted = (req, res, next) => {
+exports.emailExistedErr = (req, res, next) => {
     return setOneErrMsg(req,next,400,"Email been used");
 }

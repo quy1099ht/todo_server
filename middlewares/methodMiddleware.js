@@ -1,9 +1,7 @@
 const { errorMsgHandler } = require("../utils/errorHandler")
 
 exports.methodNotAllowed = (req, res, next) => {
-    console.log(req);
-
-    return res.status(405).json(errorMsgHandler("NOT_ALLOW", 405, "Method Not Allowed"));
+    return res.status(405).json(errorMsgHandler("NOT_ALLOW", 405, "Method/URL Not Allowed"));
 }
 
 exports.urlNotFound = (req, res, next) => {

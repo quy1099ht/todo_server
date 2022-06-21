@@ -1,26 +1,30 @@
-const Tasks = require("../../models/Tasks")
-const mongodb = require("mongodb")
-const { MongoClient } = require('mongodb');
-const { getTasks } = require("../../services/taskServices");
+const { getTasksService, addNewTaskService, getOneTaskService, updateTaskStatusService } = require("../../services/taskServices");
 const { successJsonFormat } = require("../../utils/successHandler");
-const User = require("../../models/User");
-const { getUser } = require("../../services/userServices");
 
-exports.get = function (req, res) {
-    console.log(req.user);
-    return res.status(200).json(successJsonFormat(200, getTasks(req.user), "Get Tasks"));
+
+
+exports.get = async (req, res) => {
+    return res.status(200).json(successJsonFormat(200, { tasks: await getTasksService(req.user) }, "Tasks are gotten"));
+}
+exports.getTaskDetail = async (req, res) => {
+    return res.status(200).json(successJsonFormat(200, { task: await getOneTaskService(await getTasksService(req.user), req.params.id) }, "Done"));
 }
 exports.addTask = async (req, res) => {
-    let user = await getUser(req.user.email); 
+    await addNewTaskService(req);
+    return res.status(200).json(successJsonFormat(200, {}, "Done"));
+}
 
-    return res.status(200).json(successJsonFormat(200, {}, "Done"));
-}
-exports.updateTaskStatus = async (req, res) => {
-    return res.status(200).json(successJsonFormat(200, {}, "Done"));
-}
 exports.deleteTask = async (req, res) => {
     return res.status(200).json(successJsonFormat(200, {}, "Done"));
 }
-exports.completeTask = async (req, res) => {
+
+exports.updateTaskStatus = async (req, res) => {
+    let task = await getOneTaskService(await getTasksService(req.user), req.params.id);
+    updateTaskStatusService(task,30);
+    return res.status(200).json(successJsonFormat(200, {}, "Done"));
+}
+
+exports.updateTaskContent = (req, res) => {
+    
     return res.status(200).json(successJsonFormat(200, {}, "Done"));
 }

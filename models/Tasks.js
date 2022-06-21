@@ -9,7 +9,10 @@ const taskSchema = new Schema({
   userId : String,
   title : reqString,
   content : reqString,
-  state : String
+  progress : Number,
+  state : String,
+  createAt : Date,
+  finishAt : Date
 });
 
 const Task = mongoose.model('Tasks',taskSchema);

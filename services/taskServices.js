@@ -53,13 +53,9 @@ exports.deleteTaskService = async (id) => {
 
 //Done
 exports.updateTaskStatusService = async (task, progress) => {
-    if (typeof progress === "undefined") return false;
-
-    if (typeof progress === null) return false;
+    if (!progress) return false;
 
     if (progress < 0) return false;
-
-    if (typeof task == "undefined") return false;
 
     let state = "";
     let finishAt = null;
@@ -79,3 +75,17 @@ exports.updateTaskStatusService = async (task, progress) => {
     return true;
 }
 
+exports.updateTaskContentService = async (task, contents) => {
+    console.log(contents.title);
+    if (!contents) return false;
+    
+    if (!contents.title) return false;
+
+    if (!contents.content) return false;
+
+    await Task.findByIdAndUpdate(task.id, {
+        title: contents.title,
+        content: contents.content
+    });
+    return true;
+}

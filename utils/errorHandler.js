@@ -41,3 +41,7 @@ exports.setOneErrMsg = (req, next, errStatus, errMsg) => {
     req.message = `${errMsg}`;
     return next();
 }
+
+exports.badRequestErr = (req, next) => {
+    return this.setOneErrMsg(req, next, 400, "BAD_REQUEST");
+}

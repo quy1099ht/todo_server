@@ -48,7 +48,11 @@ exports.addNewTaskService = async (req) => {
 }
 
 exports.deleteTaskService = async (id) => {
-    await Task.deleteOne({ "_id": id });
+    if (!id) return false;
+
+    const { deletedCount } = await Task.deleteOne({ "_id": id });
+    
+    return deletedCount > 0;
 }
 
 //Done
@@ -78,7 +82,7 @@ exports.updateTaskStatusService = async (task, progress) => {
 exports.updateTaskContentService = async (task, contents) => {
     console.log(contents.title);
     if (!contents) return false;
-    
+
     if (!contents.title) return false;
 
     if (!contents.content) return false;

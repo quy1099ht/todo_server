@@ -17,7 +17,7 @@ router.route('/api/v1/getTaskDetail/:id').get(accessTokenVerify, getTaskDetail, 
 
 router.route('/api/v1/addTask').post(accessTokenVerify, addTask, errorHandleMiddleware);
 
-router.route('/api/v1/deleteTask').delete(accessTokenVerify, deleteTask, errorHandleMiddleware);
+router.route('/api/v1/deleteTask/:id').delete(accessTokenVerify, deleteTask, errorHandleMiddleware);
 
 router.route('/api/v1/updateTaskStatus/:id').put(accessTokenVerify, updateTaskStatus, errorHandleMiddleware);
 

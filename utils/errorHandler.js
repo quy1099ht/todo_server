@@ -21,7 +21,7 @@ exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
         errors: [
             {
                 "code": errorCode,
-                "message": `${errorMessage}.`,
+                "description": `${errorMessage}.`,
             }
         ]
     }
@@ -31,7 +31,7 @@ exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
 exports.errorMsgGenerator = (errorStatus, errorMessage) => {
     return {
         "code": errorCodeGenerator(errorStatus, errorMessage),
-        "message": `${errorMessage}.`
+        "descriprion": `${errorMessage}.`
     }
 }
 

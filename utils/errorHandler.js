@@ -20,7 +20,7 @@ exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
         "status": errorStatus,
         errors: [
             {
-                "code": errorCode,
+                "code": errorCodeGenerator(errorStatus, errorMessage),
                 "description": `${errorMessage}.`,
             }
         ]

@@ -47,12 +47,10 @@ exports.logout = async (req, res, next) => {
     return res.status(200).json(successJsonFormat(200, undefined, "Added To Blacklist"));
 }
 
-exports.updateUserDetail = (req, res, next) => {
+exports.updateUserDetail = async (req, res, next) => {
     if(!req.files) return res.status(404).json(errorMsgHandler("",404,"Image Not Found"))
 
-    uploadAvatarService(req.files.avatar.data);
-
-    return res.status(200).json(successJsonFormat(200, undefined, "Ok"));
+    return uploadAvatarService(req.files.avatar.data,req,res);    
 }
 
 exports.getNewAccessToken = (req, res, next) => {

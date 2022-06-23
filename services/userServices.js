@@ -17,7 +17,7 @@ const insertUserToDB = (res, data) => {
 
 exports.saltRound = 10;
 
-exports.createNewUserService = (req,res) => {
+exports.createNewUserService = (req, res) => {
     return insertUserToDB(res, {
         email: req.body.email,
         password: this.getHashedPasswordService(req.body.password),
@@ -38,14 +38,24 @@ exports.getHashedPasswordService = (data) => {
 }
 
 exports.getNewKeysService = (req) => {
-    const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: "3d" });
+    const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: "1h" });
     const refreshToken = jwt.sign(req.body, process.env.REFRESH_KEY, { expiresIn: "7h" })
-    return successJsonFormat(200,{
+    return successJsonFormat(200, {
         accessToken: accessToken,
         refreshToken: refreshToken
-    },"Logged in successfully");
+    }, "Logged in successfully");
 }
 
 exports.emailExistedErr = (req, res, next) => {
-    return setOneErrMsg(req,next,400,"Email been used");
+    return setOneErrMsg(req, next, 400, "Email been used");
+}
+
+exports.getNewAccessKeyService = (req) => {
+    try {
+        accessToken = jwt.sign({ id: req.user.id, email: req.user.email }, process.env.ACCESS_KEY, { expiresIn: "1h" });
+        return accessToken;
+    } catch (err) {
+        return undefined;
+    }
+
 }

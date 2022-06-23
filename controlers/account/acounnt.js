@@ -3,10 +3,11 @@ const User = require("../../models/User");
 const mongodb = require("mongodb");
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
-const { getUserService, getNewKeysService, emailExistedErr, createNewUserService } = require("../../services/userServices");
+const { getUserService, getNewKeysService, emailExistedErr, createNewUserService, getNewAccessKeyService } = require("../../services/userServices");
 const { setOneErrMsg, errorMsgHandler } = require("../../utils/errorHandler");
 const { addToBlacklist } = require("../../services/blacklistService");
 const { successJsonFormat } = require("../../utils/successHandler");
+const { uploadAvatarService } = require("../../services/cloudinaryService");
 
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
 
@@ -47,9 +48,17 @@ exports.logout = async (req, res, next) => {
 }
 
 exports.updateUserDetail = (req, res, next) => {
+    if(!req.files) return res.status(404).json(errorMsgHandler("",404,"Image Not Found"))
 
+    uploadAvatarService(req.files.avatar.data);
+
+    return res.status(200).json(successJsonFormat(200, undefined, "Ok"));
 }
 
-exports.verify = (req, res, next) => {
-    
+exports.getNewAccessToken = (req, res, next) => {
+    accessToken = getNewAccessKeyService(req);
+
+    if(!accessToken) return res.status(200).json(errorMsgHandler("",400,"BAD_REQUEST"));
+
+    return res.status(200).json(successJsonFormat(200, accessToken, ""));
 }

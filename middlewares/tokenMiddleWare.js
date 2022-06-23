@@ -24,19 +24,20 @@ exports.accessTokenVerify = async (req, res, next) => {
     }
 }
 
-exports.refreshTokenVerify = async () => {
+exports.refreshTokenVerify = async (req, res, next) => {
     if (!req.header('authorization')) {
         return res.status(404).json(errorMsgHandler("", 404, "Token Not Found"));
     }
 
     const refreshToken = req.header('authorization').split(" ")[1].trim();
-
+   
     if (!await isExistToken(refreshToken)) return res.status(404).json(errorMsgHandler("TU", 401, "Token Unauthorized"));
 
     try {
-        const refresh = jwt.verify(refreshToken,process.env.REFRESH_KEY);
+        const user = jwt.verify(refreshToken, process.env.REFRESH_KEY);
+        req.user = user;
         return next();
     } catch (error) {
-         return res.status(498).json(errorMsgHandler("", 401, "Token Unauthorized"));
+        return res.status(498).json(errorMsgHandler("", 401, "Token Unauthorized"));
     }
 }

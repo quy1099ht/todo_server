@@ -1,9 +1,18 @@
 const Blacklist = require("../models/Blacklist");
 
-exports.isExistToken = async (token) =>{
-    token = await Blacklist.find({token : token});
-    
-    if(!token || token.length < 1) return false;
+exports.isExistToken = async (token) => {
+   
+    let token1 = await Blacklist.findOne({ token });
 
-    return true; 
+    if (token1) return false;
+
+    return true;
+}
+
+exports.addToBlacklist = async (token) => {
+    if (!token) return false;
+
+    await Blacklist.create({ token });
+    
+    return true;
 }

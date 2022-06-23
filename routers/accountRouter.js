@@ -14,4 +14,8 @@ router.route('/api/v2/login').post(controller.login, errorHandleMiddleware);
 
 router.route("/api/v2/getUser").get(accessTokenVerify, controller.getUser, errorHandleMiddleware);
 
+// router.route("/api/v2/updateUser").get(accessTokenVerify, controller, errorHandleMiddleware);
+
+router.route("/api/v2/logout").post(accessTokenVerify, controller.logout, errorHandleMiddleware);
+
 module.exports = router

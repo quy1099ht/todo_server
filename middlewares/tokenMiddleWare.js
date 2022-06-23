@@ -7,19 +7,36 @@ exports.accessTokenVerify = async (req, res, next) => {
     if (!req.header('authorization')) {
         return res.status(404).json(errorMsgHandler("NOT_FOUND", 404, "Token Not Found"));
     }
-    const accessToken = req.header('authorization');
+    const accessToken = req.header('authorization').split(" ")[1].trim();
 
-    if (!isExistToken(accessToken)) return res.status(404).json(errorMsgHandler("TN", 401, "Token Unauthorized"));
+    if (!await isExistToken(accessToken)) return res.status(404).json(errorMsgHandler("TU", 401, "Token Unauthorized"));
 
     try {
-        const user = jwt.verify(accessToken.split(" ")[1].trim(), process.env.ACCESS_KEY);
+        const user = jwt.verify(accessToken, process.env.ACCESS_KEY);
 
         //Temp way to handle my user not found
-        if(! await getUserService(user.email)) return res.status(404).json(errorMsgHandler("",404, "User Not Found"));
+        if (! await getUserService(user.email)) return res.status(404).json(errorMsgHandler("", 404, "User Not Found"));
 
         req.user = user;
         return next();
     } catch (error) {
-        return res.status(498).json(errorMsgHandler("INVALID", 498, "Invalid Token"));
+        return res.status(498).json(errorMsgHandler("", 498, "Access Token Invalid"));
+    }
+}
+
+exports.refreshTokenVerify = async () => {
+    if (!req.header('authorization')) {
+        return res.status(404).json(errorMsgHandler("", 404, "Token Not Found"));
+    }
+
+    const refreshToken = req.header('authorization').split(" ")[1].trim();
+
+    if (!await isExistToken(refreshToken)) return res.status(404).json(errorMsgHandler("TU", 401, "Token Unauthorized"));
+
+    try {
+        const refresh = jwt.verify(refreshToken,process.env.REFRESH_KEY);
+        return next();
+    } catch (error) {
+         return res.status(498).json(errorMsgHandler("", 401, "Token Unauthorized"));
     }
 }

@@ -30,8 +30,12 @@ exports.login = async (req, res, next) => {
     return res.status(200).json(getNewKeysService(req));
 }
 
-exports.getUser = (req, res, next) => {
+exports.getUser = async (req, res, next) => {
+    const user = await getUserService(req.user.email);
+    
+    if(!user) return setOneErrMsg(req,next,404,"User Not Found");
+    
     return res.status(200).json({
-        user: getUserService(req.user.email)
+        user: user
     });
 }

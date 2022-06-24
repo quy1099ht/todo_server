@@ -97,6 +97,8 @@ exports.updateTaskContentService = async (task, contents) => {
 exports.searchTitleService = async (keyword) => {
     let searches = [];
     let tasks = await Task.find({title : {'$regex' : keyword,'$options' : "i"}});
-    console.log(tasks);
+    tasks.forEach(value => {
+        searches.push({title : value.title, id : value.id});
+    })
     return searches;
 }

@@ -51,7 +51,7 @@ exports.deleteTaskService = async (id) => {
     if (!id) return false;
 
     const { deletedCount } = await Task.deleteOne({ "_id": id });
-    
+
     return deletedCount > 0;
 }
 
@@ -92,4 +92,11 @@ exports.updateTaskContentService = async (task, contents) => {
         content: contents.content
     });
     return true;
+}
+
+exports.searchTitleService = async (keyword) => {
+    let searches = [];
+    let tasks = await Task.find({title : {'$regex' : keyword,'$options' : "i"}});
+    console.log(tasks);
+    return searches;
 }

@@ -14,10 +14,13 @@ exports.accessTokenVerify = async (req, res, next) => {
     try {
         const user = jwt.verify(accessToken, process.env.ACCESS_KEY);
 
+        let userDetail = await getUserService(user.email);
+        console.log(userDetail.image);
         //Temp way to handle my user not found
-        if (! await getUserService(user.email)) return res.status(404).json(errorMsgHandler("", 404, "User Not Found"));
+        if (!userDetail) return res.status(404).json(errorMsgHandler("", 404, "User Not Found"));
 
-        req.user = user;
+        req.user = userDetail;
+        console.log(req.user.image);
         return next();
     } catch (error) {
         return res.status(498).json(errorMsgHandler("", 498, "Access Token Invalid"));
@@ -30,7 +33,7 @@ exports.refreshTokenVerify = async (req, res, next) => {
     }
 
     const refreshToken = req.header('authorization').split(" ")[1].trim();
-   
+
     if (!await isExistToken(refreshToken)) return res.status(404).json(errorMsgHandler("TU", 401, "Token Unauthorized"));
 
     try {

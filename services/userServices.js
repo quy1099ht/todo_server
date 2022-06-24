@@ -4,8 +4,9 @@ const { MongoClient } = require('mongodb');
 const Task = require("../models/Tasks");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
-const { setOneErrMsg } = require("../utils/errorHandler");
+const { setOneErrMsg, badRequestErr } = require("../utils/errorHandler");
 const { successJsonFormat } = require("../utils/successHandler");
+const { uploadAvatarService: uploadPictureService } = require("./cloudinaryService");
 
 const insertUserToDB = (res, data) => {
     User.create(data, () => {
@@ -58,4 +59,15 @@ exports.getNewAccessKeyService = (req) => {
         return undefined;
     }
 
+}
+
+exports.updateUserDetailService = async (req, res, next) => {
+    if (!req.body.username) return badRequestErr(req, next);
+
+    try {
+        const a = await User.findByIdAndUpdate({ "_id": req.user.id }, { username: req.body.username });
+        return res.status(200).json(successJsonFormat(200, {}, "Updated"));
+    } catch (error) {
+        return setOneErrMsg(req, next, "404", "User Not Found")
+    }
 }

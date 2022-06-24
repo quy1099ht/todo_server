@@ -3,11 +3,11 @@ const User = require("../../models/User");
 const mongodb = require("mongodb");
 const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
-const { getUserService, getNewKeysService, emailExistedErr, createNewUserService, getNewAccessKeyService } = require("../../services/userServices");
-const { setOneErrMsg, errorMsgHandler } = require("../../utils/errorHandler");
+const { getUserService, getNewKeysService, emailExistedErr, createNewUserService, getNewAccessKeyService, updateUserDetailService } = require("../../services/userServices");
+const { setOneErrMsg, errorMsgHandler, badRequestErr } = require("../../utils/errorHandler");
 const { addToBlacklist } = require("../../services/blacklistService");
 const { successJsonFormat } = require("../../utils/successHandler");
-const { uploadAvatarService } = require("../../services/cloudinaryService");
+const { uploadAvatarService: uploadPictureService } = require("../../services/cloudinaryService");
 
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
 
@@ -36,9 +36,7 @@ exports.login = async (req, res, next) => {
 exports.getUser = async (req, res, next) => {
     const user = await getUserService(req.user.email);
 
-    return res.status(200).json({
-        user: user
-    });
+    return res.status(200).json(successJsonFormat(200, { user: user }, "Done"));
 }
 
 exports.logout = async (req, res, next) => {
@@ -48,15 +46,19 @@ exports.logout = async (req, res, next) => {
 }
 
 exports.updateUserDetail = async (req, res, next) => {
-    if(!req.files) return res.status(404).json(errorMsgHandler("",404,"Image Not Found"))
-
-    return uploadAvatarService(req.files.avatar.data,req,res);    
+    return updateUserDetailService(req, res, next);
 }
 
 exports.getNewAccessToken = (req, res, next) => {
     accessToken = getNewAccessKeyService(req);
 
-    if(!accessToken) return res.status(200).json(errorMsgHandler("",400,"BAD_REQUEST"));
+    if (!accessToken) return res.status(200).json(errorMsgHandler("", 400, "BAD_REQUEST"));
 
     return res.status(200).json(successJsonFormat(200, accessToken, ""));
+}
+
+exports.updateAvatar = (req, res, next) => {
+    if (!req.files) return badRequestErr(req, next);
+
+    return uploadPictureService(req.files.avatar.data, req.files.avatar.name, req, res, next);
 }

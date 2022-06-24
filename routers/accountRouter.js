@@ -20,4 +20,6 @@ router.route("/api/v2/logout").post(accessTokenVerify, controller.logout, errorH
 
 router.route("/api/v2/getAccessToken").post(refreshTokenVerify, controller.getNewAccessToken, errorHandleMiddleware);
 
+router.route("/api/v2/updateAvatar").put(accessTokenVerify, controller.updateAvatar, errorHandleMiddleware);
+
 module.exports = router

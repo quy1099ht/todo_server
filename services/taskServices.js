@@ -57,12 +57,12 @@ exports.deleteTaskService = async (id) => {
 
 //Done
 exports.updateTaskStatusService = async (task, progress) => {
-    if (!progress) return false;
-
-    if (progress < 0) return false;
+    if (progress != 0 && !progress) return false;
 
     let state = "";
     let finishAt = null;
+
+    if (progress < 0) state = "Rejected";
 
     if (progress === 0) state = "New";
 
@@ -96,9 +96,13 @@ exports.updateTaskContentService = async (task, contents) => {
 
 exports.searchTitleService = async (keyword) => {
     let searches = [];
-    let tasks = await Task.find({title : {'$regex' : keyword,'$options' : "i"}});
+    const limitItemsNumber = 10;
+
+    //Just like where title = %keyword% in SQL
+    let tasks = await Task.find({ title: { '$regex': keyword, '$options': "i" } }).limit(limitItemsNumber);
+
     tasks.forEach(value => {
-        searches.push({title : value.title, id : value.id});
+        searches.push({ title: value.title, id: value.id });
     })
     return searches;
 }

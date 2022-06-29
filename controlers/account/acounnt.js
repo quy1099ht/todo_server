@@ -8,6 +8,7 @@ const { setOneErrMsg, errorMsgHandler, badRequestErr } = require("../../utils/er
 const { addToBlacklist } = require("../../services/blacklistService");
 const { successJsonFormat } = require("../../utils/successHandler");
 const { uploadAvatarService: uploadPictureService } = require("../../services/cloudinaryService");
+const { sendForgotPasswordMail } = require("../../services/mailService");
 
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
 
@@ -61,4 +62,10 @@ exports.updateAvatar = (req, res, next) => {
     if (!req.files) return badRequestErr(req, next);
 
     return uploadPictureService(req.files.avatar.data, req.files.avatar.name, req, res, next);
+}
+
+exports.forgot_password = (req, res, next) => {
+    // sendForgotPasswordMail();
+
+    return res.status(202).json(successJsonFormat(202, undefined, "This feature is not yet implemented"));
 }

@@ -19,11 +19,13 @@
     "express": "^4.18.1",
     "express-fileupload": "^1.4.0",
     "express-validator": "^6.14.1",
+    "googleapis": "^104.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongo": "^0.1.0",
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.2",
     "node-fetch": "^3.2.6",
+    "nodemailer": "^6.7.5",
     "nodemon": "^2.0.16",
     "streamifier": "^0.1.1"
   }

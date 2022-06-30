@@ -7,6 +7,7 @@ const HTTP_STATUS = {
     FORBIDDEN : 403,
     NOT_FOUND : 404,
     METHOD_NOT_ALLOWED : 405,
+    CONFLICT : 409,
     UNPROCESSABLE_ENTITY : 422,
     TOKEN_INVALID : 498,
     TOKEN_REQUIRED : 499, // 499 Client Closed Request or 499 Token required

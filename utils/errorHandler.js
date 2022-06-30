@@ -1,3 +1,5 @@
+const HTTP_STATUS = require("./enums/error_codes");
+
 const errorCodeGenerator = (errorStatus, errorMessage) => {
 
     const listMsg = errorMessage.toUpperCase().split(" ");
@@ -12,7 +14,7 @@ const errorCodeGenerator = (errorStatus, errorMessage) => {
 
 exports.errorMsgHandler = (errorCode, errorStatus, errorMessage) => {
     switch (errorStatus) {
-        case 409:
+        case HTTP_STATUS.CONFLICT:
             errorCode = `${errorStatus}-${errorCode[4]}:EXISTED`
             break;
     }

@@ -7,10 +7,14 @@ const jwt = require("jsonwebtoken");
 const { setOneErrMsg, badRequestErr } = require("../utils/errorHandler");
 const { successJsonFormat } = require("../utils/successHandler");
 const { uploadAvatarService: uploadPictureService } = require("./cloudinaryService");
+const HTTP_STATUS = require("../utils/enums/error_codes");
+
+const accessExpiredTime = "1h";
+const refreshExpiredTime = "7h";
 
 const insertUserToDB = (res, data) => {
     User.create(data, () => {
-        return res.status(200).json({
+        return res.status(HTTP_STATUS.OK).json({
             message: "Your account is registered!"
         });
     })
@@ -39,21 +43,21 @@ exports.getHashedPasswordService = (data) => {
 }
 
 exports.getNewKeysService = (req) => {
-    const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: "1h" });
-    const refreshToken = jwt.sign(req.body, process.env.REFRESH_KEY, { expiresIn: "7h" })
-    return successJsonFormat(200, {
+    const accessToken = jwt.sign(req.body, process.env.ACCESS_KEY, { expiresIn: accessExpiredTime });
+    const refreshToken = jwt.sign(req.body, process.env.REFRESH_KEY, { expiresIn: refreshExpiredTime })
+    return successJsonFormat(HTTP_STATUS.OK, {
         accessToken: accessToken,
         refreshToken: refreshToken
     }, "Logged in successfully");
 }
 
 exports.emailExistedErr = (req, res, next) => {
-    return setOneErrMsg(req, next, 400, "Email been used");
+    return setOneErrMsg(req, next, HTTP_STATUS.BAD_REQUEST, "Email been used");
 }
 
 exports.getNewAccessKeyService = (req) => {
     try {
-        accessToken = jwt.sign({ id: req.user.id, email: req.user.email }, process.env.ACCESS_KEY, { expiresIn: "1h" });
+        accessToken = jwt.sign({ id: req.user.id, email: req.user.email }, process.env.ACCESS_KEY, { expiresIn: accessExpiredTime });
         return accessToken;
     } catch (err) {
         return undefined;
@@ -66,7 +70,7 @@ exports.updateUserDetailService = async (req, res, next) => {
 
     try {
         const a = await User.findByIdAndUpdate({ "_id": req.user.id }, { username: req.body.username });
-        return res.status(200).json(successJsonFormat(200, {}, "Updated"));
+        return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, {}, "Updated"));
     } catch (error) {
         return setOneErrMsg(req, next, "404", "User Not Found")
     }

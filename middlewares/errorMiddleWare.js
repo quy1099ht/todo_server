@@ -1,3 +1,4 @@
+const HTTP_STATUS = require("../utils/enums/error_codes");
 const { errorMsgHandler } = require("../utils/errorHandler")
 
 exports.errorHandleMiddleware = (req, res) => {
@@ -8,7 +9,7 @@ exports.validateErrMiddleware = (req, res, next) => {
     
     if (req.errors.length < 1) return next();
 
-    return res.status(422).json({errors : req.errors});
+    return res.status(HTTP_STATUS.UNPROCESSABLE_ENTITY).json({errors : req.errors});
 }
 
 exports.initErrors = (req, res, next) => {

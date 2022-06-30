@@ -9,6 +9,7 @@ const { addToBlacklist } = require("../../services/blacklistService");
 const { successJsonFormat } = require("../../utils/successHandler");
 const { uploadAvatarService: uploadPictureService } = require("../../services/cloudinaryService");
 const { sendForgotPasswordMail } = require("../../services/mailService");
+const HTTP_STATUS = require("../../utils/enums/error_codes");
 
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
 
@@ -24,26 +25,26 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
     const user = await getUserService(req.body.email);
-    if (!user) return setOneErrMsg(req, next, 422, "Email is wrong");
+    if (!user) return setOneErrMsg(req, next, HTTP_STATUS.UNPROCESSABLE_ENTITY, "Email is wrong");
 
     if (!bcrypt.compareSync(req.body.password, user.password.trim())) return setOneErrMsg(req, next, 422, "Password is wrong");
 
     req.body.password = undefined;
     req.body.id = user.id;
 
-    return res.status(200).json(getNewKeysService(req));
+    return res.status(HTTP_STATUS.OK).json(getNewKeysService(req));
 }
 
 exports.getUser = async (req, res, next) => {
     const user = await getUserService(req.user.email);
 
-    return res.status(200).json(successJsonFormat(200, { user: user }, "Done"));
+    return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, { user: user }, "Done"));
 }
 
 exports.logout = async (req, res, next) => {
     token = req.header('authorization').split(" ")[1];
     await addToBlacklist(token);
-    return res.status(200).json(successJsonFormat(200, undefined, "Added To Blacklist"));
+    return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, undefined, "Added To Blacklist"));
 }
 
 exports.updateUserDetail = async (req, res, next) => {
@@ -53,9 +54,9 @@ exports.updateUserDetail = async (req, res, next) => {
 exports.getNewAccessToken = (req, res, next) => {
     accessToken = getNewAccessKeyService(req);
 
-    if (!accessToken) return res.status(200).json(errorMsgHandler("", 400, "BAD_REQUEST"));
+    if (!accessToken) return res.status(HTTP_STATUS.BAD_REQUEST).json(errorMsgHandler("", HTTP_STATUS.BAD_REQUEST, "BAD_REQUEST"));
 
-    return res.status(200).json(successJsonFormat(200, accessToken, ""));
+    return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, accessToken, ""));
 }
 
 exports.updateAvatar = (req, res, next) => {
@@ -67,5 +68,5 @@ exports.updateAvatar = (req, res, next) => {
 exports.forgot_password = (req, res, next) => {
     // sendForgotPasswordMail();
 
-    return res.status(202).json(successJsonFormat(202, undefined, "This feature is not yet implemented"));
+    return res.status(HTTP_STATUS.ACCEPTED).json(successJsonFormat(HTTP_STATUS.ACCEPTED, undefined, "This feature is not yet implemented"));
 }

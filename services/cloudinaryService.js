@@ -3,14 +3,15 @@ const streamifier = require("streamifier");
 const { successJsonFormat } = require("../utils/successHandler");
 const { setOneErrMsg, errorMsgHandler, badRequestErr } = require("../utils/errorHandler");
 const User = require("../models/User");
+const HTTP_STATUS = require("../utils/enums/error_codes");
 
 const uploadToCloundinary = (fileBuffer, fileName, req, res) => {
     cloudinary.uploader.upload_stream({ upload_preset: "ml_default", filename_override: fileName }, (err, result) => {
-        if (err) return res.status(500).json(errorMsgHandler("", 500, "Internal Server Error"));
+        if (err) return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(errorMsgHandler("", HTTP_STATUS.INTERNAL_SERVER_ERROR, "Internal Server Error"));
         else {
             User.findByIdAndUpdate({ "_id": req.user.id }, { image: result.url }, (err, resul) => {
-                if (err) return res.status(500).json(errorMsgHandler("", 500, "Internal Server Error"));
-                return res.status(200).json(successJsonFormat(200, result.url, "Avatar Updated"))
+                if (err) return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(errorMsgHandler("", HTTP_STATUS.INTERNAL_SERVER_ERROR, "Internal Server Error"));
+                return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, result.url, "Avatar Updated"))
             });
         }
     }).end(fileBuffer);

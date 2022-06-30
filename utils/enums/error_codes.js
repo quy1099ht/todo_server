@@ -1,0 +1,18 @@
+const HTTP_STATUS = {
+    OK : 200,
+    ACCEPTED : 202,
+    NO_CONTENT : 204,
+    BAD_REQUEST : 400,
+    UNAUTHORIZED : 401,
+    FORBIDDEN : 403,
+    NOT_FOUND : 404,
+    METHOD_NOT_ALLOWED : 405,
+    UNPROCESSABLE_ENTITY : 422,
+    TOKEN_INVALID : 498,
+    TOKEN_REQUIRED : 499, // 499 Client Closed Request or 499 Token required
+    INTERNAL_SERVER_ERROR : 500,
+    BAD_GATEWAY : 502,
+    SERVICE_UNAVAILABLE : 503
+};
+
+module.exports = HTTP_STATUS

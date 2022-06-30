@@ -1,4 +1,5 @@
 const { getTasksService } = require("../../../services/taskServices");
+const HTTP_STATUS = require("../../../utils/enums/error_codes");
 const { badRequestErr, setOneErrMsg } = require("../../../utils/errorHandler");
 const { successJsonFormat } = require("../../../utils/successHandler");
 
@@ -16,7 +17,7 @@ exports.getAllTask = async (req, res, next) => {
 
     tasks = await getTasksService(req.user, limit, page);
 
-    if (tasks.length === 0) return setOneErrMsg(req, next, 404, "Tasks Not Found");
+    if (tasks.length === 0) return setOneErrMsg(req, next, HTTP_STATUS.NOT_FOUND, "Tasks Not Found");
 
-    return res.status(200).json(successJsonFormat(200, { tasks: tasks }, "Tasks are found"));
+    return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, { tasks: tasks }, "Tasks are found"));
 }

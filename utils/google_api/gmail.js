@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const MailComposer = require('nodemailer/lib/mail-composer');
-const credentials = require('./credentials.json');
-const tokens = require('./token.json');
+const credentials = require('../../assets/credentials.json');
+const tokens = require('../../assets/token.json');
 
 const getGmailService = () => {
     const { client_secret, client_id, redirect_uris } = credentials.web;
@@ -21,7 +21,7 @@ const createMail = async (options) => {
     return encodeMessage(message);
 };
 
-const sendMail = async (options) => {
+const sendMailService = async (options) => {
     const gmail = getGmailService();
     const rawMessage = await createMail(options);
     const { data: { id } = {} } = await gmail.users.messages.send({
@@ -33,4 +33,4 @@ const sendMail = async (options) => {
     return id;
 };
 
-module.exports = sendMail;
+module.exports = sendMailService;

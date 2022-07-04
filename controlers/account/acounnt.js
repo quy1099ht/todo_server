@@ -1,15 +1,12 @@
-const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
-const mongodb = require("mongodb");
-const { MongoClient } = require('mongodb');
 const bcrypt = require('bcrypt');
 const { getUserService, getNewKeysService, emailExistedErr, createNewUserService, getNewAccessKeyService, updateUserDetailService } = require("../../services/userServices");
 const { setOneErrMsg, errorMsgHandler, badRequestErr } = require("../../utils/errorHandler");
 const { addToBlacklist } = require("../../services/blacklistService");
 const { successJsonFormat } = require("../../utils/successHandler");
 const { uploadAvatarService: uploadPictureService } = require("../../services/cloudinaryService");
-const { sendForgotPasswordMail } = require("../../services/mailService");
+
 const HTTP_STATUS = require("../../utils/enums/error_codes");
+const { sendNewPassword } = require('../../utils/google_api/sendNewPassword');
 
 const mails = ["a@gmail.com", "b@gmail.com", "barry@gmail.com"]
 
@@ -66,7 +63,7 @@ exports.updateAvatar = (req, res, next) => {
 }
 
 exports.forgot_password = (req, res, next) => {
-    // sendForgotPasswordMail();
+    sendNewPassword("nguyenlong0l2005@gmail.com","ssokcsakjadda"); 
 
     return res.status(HTTP_STATUS.ACCEPTED).json(successJsonFormat(HTTP_STATUS.ACCEPTED, undefined, "This feature is not yet implemented"));
 }

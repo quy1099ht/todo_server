@@ -75,3 +75,16 @@ exports.updateUserDetailService = async (req, res, next) => {
         return setOneErrMsg(req, next, "404", "User Not Found")
     }
 }
+
+exports.updateUserTempPasswordService = async (user) => {
+
+    let new_password = Math.random().toString(36).substring(0, 9);
+
+    try {
+        await User.findByIdAndUpdate({ "_id": user.id }, { password: this.getHashedPasswordService(new_password) });
+    } catch (error) {
+        return false;
+    }
+
+    return new_password;
+}

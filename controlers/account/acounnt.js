@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { getUserService, getNewKeysService, emailExistedErr, createNewUserService, getNewAccessKeyService, updateUserDetailService } = require("../../services/userServices");
+const { getUserService, getNewKeysService, emailExistedErr, createNewUserService, getNewAccessKeyService, updateUserDetailService, updateUserTempPasswordService } = require("../../services/userServices");
 const { setOneErrMsg, errorMsgHandler, badRequestErr } = require("../../utils/errorHandler");
 const { addToBlacklist } = require("../../services/blacklistService");
 const { successJsonFormat } = require("../../utils/successHandler");
@@ -62,8 +62,16 @@ exports.updateAvatar = (req, res, next) => {
     return uploadPictureService(req.files.avatar.data, req.files.avatar.name, req, res, next);
 }
 
-exports.forgot_password = (req, res, next) => {
-    sendNewPassword("nguyenlong0l2005@gmail.com","ssokcsakjadda"); 
+exports.forgot_password = async (req, res, next) => {
+    const user = await getUserService(req.user.email);
 
-    return res.status(HTTP_STATUS.ACCEPTED).json(successJsonFormat(HTTP_STATUS.ACCEPTED, undefined, "This feature is not yet implemented"));
+    const updatedPassword = await updateUserTempPasswordService(user);
+    
+    console.log(updatedPassword);
+
+    if(!updatedPassword) return res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json(errorMsgHandler("", HTTP_STATUS.INTERNAL_SERVER_ERROR, "Can't update password"));
+
+    await sendNewPassword(user.email,updatedPassword); 
+
+    return res.status(HTTP_STATUS.OK).json(successJsonFormat(HTTP_STATUS.OK, undefined, "Please check your email"));
 }
